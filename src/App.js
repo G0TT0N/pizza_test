@@ -18,9 +18,8 @@ class App extends Component {
             <div className="wrapper">
                 {this.state.isLoading
                     ? <Preloader/>
-                    : <div>
-                        <EmployeesContainer />
-                    </div>
+                    : <EmployeesContainer />
+
                 }
             </div>
         );
