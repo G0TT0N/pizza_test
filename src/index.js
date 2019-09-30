@@ -7,6 +7,8 @@ import 'antd/dist/antd.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import store from "./redux/store";
+import _ from 'lodash';
+import employees from './employees';
 
 ReactDOM.render(
     <BrowserRouter>
