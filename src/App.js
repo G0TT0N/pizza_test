@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import Preloader from "./component/Preloader/Preloader";
 import EmployeesContainer from "./Containers/EmployeesContainer";
+import {Route} from "react-router-dom";
+import EmployeesEdit from "./component/EmployeesEdit/EmployeesEdit";
 
 class App extends Component {
     state = {
@@ -18,8 +20,10 @@ class App extends Component {
             <div className="wrapper">
                 {this.state.isLoading
                     ? <Preloader/>
-                    : <EmployeesContainer />
-
+                    : <React.Fragment>
+                        <Route exact path='/' component={EmployeesContainer}/>
+                        <Route path='/emplEdit' component={EmployeesEdit}/>
+                    </React.Fragment>
                 }
             </div>
         );

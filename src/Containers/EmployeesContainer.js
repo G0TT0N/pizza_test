@@ -1,16 +1,14 @@
 import React from 'react';
 import _ from 'lodash';
-import Employees from "../component/Employees/Employees";
-import {getEmployees} from "../redux/reducers/employeesRdc";
 import {connect} from "react-redux";
 import employees from "../employees";
+import Employees from "../component/Employees/Employees";
+import {getEmployees, setEmployeesData} from "../redux/reducers/employeesRdc";
 
 
 class EmployeesContainer extends React.Component {
     state = {
-        data: [],
         sort: 'asc',
-        sortField: 'id',
     };
 
     componentDidMount() {
@@ -20,15 +18,26 @@ class EmployeesContainer extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         // console.log(this.props, 'prevProps');
         // console.log(this.state.data, 'prevState');
-        if (this.state.data.length < this.props.emplData.length) {
-            this.setState({
-                data: this.props.emplData.concat()
-            });
+        if (this.props.emplData === prevProps.emplData) {
+            this.props.setEmployeesData(this.props.emplData)
         }
     }
 
+    buttonName = sortField => {
+        const clonedEmpl = this.props.emplData.concat();
+        const sortType = this.state.sort === "asc" ? 'desc' : 'asc';
+        const orderedData = _.orderBy(clonedEmpl, sortField, sortType);
+
+        this.props.setEmployeesData(orderedData);
+
+        this.setState({
+            sort: sortType,
+        });
+    };
+
     buttonBirth = (sortField) => {
-        const clonedEmpl = this.state.data.concat();
+        const clonedEmpl = this.props.emplData.concat();
+        console.log(clonedEmpl);
 
         const newDate = clonedEmpl.map(key => {
             let year = key.birthday.substr(6, 4);
@@ -56,43 +65,73 @@ class EmployeesContainer extends React.Component {
             date.birthday = day + '.' + month + '.' + year;
         });
 
+        this.props.setEmployeesData(orderedData);
+
         this.setState({
-            data: orderedData,
             sort: sortType,
-            sortField,
         });
+
+
     };
 
-    onSort = sortField => {
-        const clonedEmpl = this.state.data.concat();
-        const sortType = this.state.sort === "asc" ? 'desc' : 'asc';
-        const orderedData = _.orderBy(clonedEmpl, sortField, sortType);
 
-        // console.log(orderedData);
-        this.setState({
-            data: orderedData,
-            sort: sortType,
-            sortField,
-        });
+    buttonRole = sortField => {
+        const stateClone = this.props.emplData.concat();
+        let arr = [];
+
+        if (sortField === 'driver') {
+            arr = stateClone.filter(data => data.role === 'driver');
+        } else if (sortField === 'cook') {
+            arr = stateClone.filter(data => data.role === 'cook');
+        } else if (sortField === 'waiter') {
+            arr = stateClone.filter(data => data.role === 'waiter');
+        }
+
+        this.props.setEmployeesData(arr);
+    };
+
+    buttonArchive = archive => {
+        const clonedEmpl = this.props.emplData.concat();
+        let arr = [];
+
+        if (archive === 'isArchive') {
+            arr = clonedEmpl.filter(archive => archive.isArchive);
+        } else if (archive === 'isArchiveNon') {
+            arr = clonedEmpl.filter(archive => archive.isArchive === false);
+        }
+
+        this.props.setEmployeesData(arr);
+    };
+
+    buttonReset = () => {
+        this.props.setEmployeesData(employees);
     };
 
     render() {
-        // console.log(this.props, 'props');
+        // console.log(this.props.emplData, 'props');
         // console.log(this.state.data, 'state Container');
         return (
-            <Employees
-                data={this.state.data}
-                onSort={this.onSort}
-                buttonBirth={this.buttonBirth}
-            />
+            <React.Fragment>
+                <Employees
+                    data={this.props.emplData}
+                    buttonName={this.buttonName}
+                    buttonBirth={this.buttonBirth}
+                    buttonRole={this.buttonRole}
+                    buttonArchive={this.buttonArchive}
+                    buttonReset={this.buttonReset}
+                    sort={this.state.sort}
+                />
+            </React.Fragment>
         )
     };
 }
 
 let mapStateToProps = (state) => {
+    // console.log(state.employeesList);
+
     return {
         emplData: state.employeesList,
     }
 };
 
-export default connect(mapStateToProps, {getEmployees})(EmployeesContainer);
+export default connect(mapStateToProps, {getEmployees, setEmployeesData})(EmployeesContainer);
