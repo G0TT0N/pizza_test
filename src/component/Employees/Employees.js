@@ -24,16 +24,14 @@ class Employees extends React.Component {
                     </thead>
                     <tbody>
                     {this.props.data && this.props.data.map(empl => (
-
                         <tr key={empl.id} className={'table__body'}>
                             <td className={'table__body-item'}>{empl.id}</td>
-                            <td className={'table__body-item'}><NavLink to='/emplEdit'>{empl.name}</NavLink></td>
+                            <td onClick={this.props.getTargetEmpl} className={'table__body-item'}><NavLink to='/emplEdit'>{empl.name}</NavLink></td>
                             <td className={'table__body-item'}>{empl.birthday}</td>
                             <td className={'table__body-item'}>{empl.role}</td>
                             <td className={'table__body-item'}>{empl.phone}</td>
                             <td className={'table__body-item'}>{empl.isArchive ? 'В архиве' : ''}</td>
                         </tr>
-
                     ))}
                     </tbody>
                 </table>

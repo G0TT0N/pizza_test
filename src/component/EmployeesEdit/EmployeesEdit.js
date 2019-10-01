@@ -1,44 +1,37 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
-import employees from "../../employees";
-import {getEmployees} from "../../redux/reducers/employeesRdc";
+import {getEditEmployees} from "../../redux/reducers/employeesEditRdc";
 
 class EmployeesEdit extends Component {
-    state = {
-        data: [],
-    };
 
     componentDidMount() {
-        this.props.getEmployees(employees);
+
     }
 
     componentDidUpdate(prevProps, prevState) {
         // console.log(this.props, 'prevProps');
         // console.log(this.state.data, 'prevState');
-        if (this.state.data === prevState.data) {
-            this.setState({
-                data: this.props.emplData.concat()
-            });
-        }
+
     }
 
 
     render() {
-        console.log(this.props);
+        console.log(this.props.targetEmpl);
+        // console.log(this.state);
         return (
             <div>
-                123
+                имя
+                <input type="text" placeholder={this.props.targetEmpl.name}/>
             </div>
         );
     }
 }
 
 let mapStateToProps = (state) => {
-    // console.log(state);
-
+    console.log(state, 'state Target');
     return {
-        emplData: state.employeesList,
+        targetEmpl: state.employeesList.targetEmpl[0],
     }
 };
 
-export default connect(mapStateToProps, {getEmployees})(EmployeesEdit);
+export default connect(mapStateToProps, {getEditEmployees})(EmployeesEdit);

@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {connect} from "react-redux";
 import employees from "../employees";
 import Employees from "../component/Employees/Employees";
-import {getEmployees, setEmployeesData} from "../redux/reducers/employeesRdc";
+import {getEmployees, routeTargetEmployees} from "../redux/reducers/employeesRdc";
 
 
 class EmployeesContainer extends React.Component {
@@ -12,14 +12,8 @@ class EmployeesContainer extends React.Component {
     };
 
     componentDidMount() {
-        this.props.getEmployees(employees);
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        // console.log(this.props, 'prevProps');
-        // console.log(this.state.data, 'prevState');
-        if (this.props.emplData === prevProps.emplData) {
-            this.props.setEmployeesData(this.props.emplData)
+        if (!this.props.emplData) {
+            this.props.getEmployees(employees);
         }
     }
 
@@ -28,7 +22,7 @@ class EmployeesContainer extends React.Component {
         const sortType = this.state.sort === "asc" ? 'desc' : 'asc';
         const orderedData = _.orderBy(clonedEmpl, sortField, sortType);
 
-        this.props.setEmployeesData(orderedData);
+        this.props.getEmployees(orderedData);
 
         this.setState({
             sort: sortType,
@@ -37,7 +31,7 @@ class EmployeesContainer extends React.Component {
 
     buttonBirth = (sortField) => {
         const clonedEmpl = this.props.emplData.concat();
-        console.log(clonedEmpl);
+        const sortType = this.state.sort === "asc" ? 'desc' : 'asc';
 
         const newDate = clonedEmpl.map(key => {
             let year = key.birthday.substr(6, 4);
@@ -47,7 +41,6 @@ class EmployeesContainer extends React.Component {
             return key
         });
 
-        const sortType = this.state.sort === "asc" ? 'desc' : 'asc';
         const orderedData = _.orderBy(newDate, sortField, sortType);
 
         orderedData.forEach(date => {
@@ -65,13 +58,11 @@ class EmployeesContainer extends React.Component {
             date.birthday = day + '.' + month + '.' + year;
         });
 
-        this.props.setEmployeesData(orderedData);
+        this.props.getEmployees(orderedData);
 
         this.setState({
             sort: sortType,
         });
-
-
     };
 
 
@@ -87,7 +78,7 @@ class EmployeesContainer extends React.Component {
             arr = stateClone.filter(data => data.role === 'waiter');
         }
 
-        this.props.setEmployeesData(arr);
+        this.props.getEmployees(arr);
     };
 
     buttonArchive = archive => {
@@ -100,11 +91,20 @@ class EmployeesContainer extends React.Component {
             arr = clonedEmpl.filter(archive => archive.isArchive === false);
         }
 
-        this.props.setEmployeesData(arr);
+        this.props.getEmployees(arr);
     };
 
     buttonReset = () => {
-        this.props.setEmployeesData(employees);
+        this.props.getEmployees(employees);
+    };
+
+    getTargetEmpl = (e) => {
+        let clonedEmpl = [...this.props.emplData];
+        let targetEmpl = clonedEmpl.filter(item => {
+            if (item.name === e.target.innerText) return item
+        });
+
+        this.props.routeTargetEmployees(targetEmpl);
     };
 
     render() {
@@ -120,6 +120,7 @@ class EmployeesContainer extends React.Component {
                     buttonArchive={this.buttonArchive}
                     buttonReset={this.buttonReset}
                     sort={this.state.sort}
+                    getTargetEmpl={this.getTargetEmpl}
                 />
             </React.Fragment>
         )
@@ -127,11 +128,13 @@ class EmployeesContainer extends React.Component {
 }
 
 let mapStateToProps = (state) => {
-    // console.log(state.employeesList);
-
+    // console.log(state);
     return {
-        emplData: state.employeesList,
+        emplData: state.employeesList.newEmplData,
     }
 };
 
-export default connect(mapStateToProps, {getEmployees, setEmployeesData})(EmployeesContainer);
+export default connect(mapStateToProps, {
+    getEmployees,
+    routeTargetEmployees
+})(EmployeesContainer);
