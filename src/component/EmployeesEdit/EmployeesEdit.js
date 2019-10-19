@@ -1,11 +1,19 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {getEditEmployees} from "../../redux/reducers/employeesEditRdc";
+import {NavLink} from "react-router-dom";
 
 class EmployeesEdit extends Component {
+    state = {
+        emplData: false
+    };
 
     componentDidMount() {
-
+        if(this.props.targetEmpl){
+            this.setState({
+                emplData: true
+            })
+        }
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -16,21 +24,43 @@ class EmployeesEdit extends Component {
 
 
     render() {
-        console.log(this.props.targetEmpl);
-        // console.log(this.state);
+        // console.log(this.props.targetEmpl);
+        console.log(this.state.emplData);
         return (
             <div>
-                имя
-                <input type="text" placeholder={this.props.targetEmpl.name}/>
+                {!this.state.emplData
+                    ? <div><NavLink to='/'>Выберите сотрудника</NavLink></div>
+                    : <div>
+                        <div>
+                            имя {this.props.targetEmpl[0].name}
+                            <button> Изменить</button>
+                        </div>
+                        <div>
+                            дата рождения {this.props.targetEmpl[0].birthday}
+                            <button> Изменить</button>
+                        </div>
+                        <div>
+                            телефон {this.props.targetEmpl[0].phone}
+                            <button> Изменить</button>
+                        </div>
+                        <div>
+                            должность {this.props.targetEmpl[0].role}
+                            <button> Изменить</button>
+                        </div>
+                        <div>
+                            архив {this.props.targetEmpl[0].isArchive}
+                            <button> Изменить</button>
+                        </div>
+                    </div>}
             </div>
         );
     }
 }
 
 let mapStateToProps = (state) => {
-    console.log(state, 'state Target');
+    // console.log(state, 'state Target');
     return {
-        targetEmpl: state.employeesList.targetEmpl[0],
+        targetEmpl: state.employeesList.targetEmpl,
     }
 };
 

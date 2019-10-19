@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sort = (props) => {
+const SortField = (props) => {
     return (
         <div className='sort__wrapper'>
             <div className={'sort__block'}>
@@ -27,4 +27,4 @@ const Sort = (props) => {
     );
 };
 
-export default Sort;
+export default SortField;

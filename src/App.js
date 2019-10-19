@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Preloader from "./component/Preloader/Preloader";
-import EmployeesContainer from "./Containers/EmployeesContainer";
+import EmployeesContainer from "./containers/EmployeesContainer";
 import {Route} from "react-router-dom";
 import EmployeesEdit from "./component/EmployeesEdit/EmployeesEdit";
 

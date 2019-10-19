@@ -1,6 +1,6 @@
 import React from 'react';
 import './Employee.scss'
-import Sort from "../Sort/Sort";
+import SortField from "../Sort/SortField";
 import {NavLink} from "react-router-dom";
 
 
@@ -10,7 +10,7 @@ class Employees extends React.Component {
         // console.log(this.props.data, 'Employees props data');
         return (
             <div>
-                <Sort {...this.props}/>
+                <SortField {...this.props}/>
                 <table className={'table'}>
                     <thead>
                     <tr className={'table__header'}>
